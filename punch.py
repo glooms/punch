@@ -5,14 +5,13 @@ from datetime import datetime, timedelta
 
 def write_date(date, punch):
     s = str(date) + '\t' + punch + '\n'
+    print punch
     log.write(s)
-    print date
     count.seek(0)
     count.write(str(c) + '\n')
 
 def write_delta(t0, t1):
     delta = t1 - t0
-    print delta
     log.write(str(delta) + '\n')
 
 def open_file(file_name):
@@ -26,7 +25,6 @@ def total_time():
     today = datetime.today()
     for line in log:
         if re.match('^\d?\d:\d\d:\d\d\.\d{6}$', line):
-#            print prev.split('.')[0]
             ptime = datetime.strptime(prev.split('.')[0], '%Y-%m-%d %H:%M:%S')
             if ptime.month == today.month:
                 temp = line.split(':')
@@ -40,15 +38,15 @@ def total_time():
 
 
 if __name__ == '__main__':
-    log = open_file('.log.txt')
+    log = open_file('.log')
     count = open_file('.count')
     try: c = int(count.read())
     except: c = 0
-    if sys.argv[1] == 'total' and c != 0:
-        print total_time()
-        sys.exit()
+    if len(sys.argv) == 2:
+        if sys.argv[1] == 'total' and c != 0:
+            print total_time()
+            sys.exit()
     c += 1
-    print c
     if c & 1:
         try: 
             for line in log:
