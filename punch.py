@@ -34,4 +34,3 @@ def punch():
         append_date(log, count, c, t1, 'out')
         append_delta(log, t0, t1)
     log.close()
-    count.close()

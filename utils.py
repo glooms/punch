@@ -39,3 +39,9 @@ def append_date(log, count, c, date, punch):
 def append_delta(log, t1, t0):
     delta = t0 - t1
     log.write(str(delta) + '\n')
+
+
+def get_last_line(log):
+    for line in log:
+        pass
+    return line
