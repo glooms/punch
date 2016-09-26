@@ -2,64 +2,41 @@ import os.path
 import sys
 import re
 from datetime import datetime, timedelta
+from utils import *
+from script_manager import Manager
 
-def write_date(date, punch):
-    s = str(date) + '\t' + punch + '\n'
-    print punch
-    log.write(s)
-    count.seek(0)
-    count.write(str(c) + '\n')
-
-def write_delta(t0, t1):
-    delta = t1 - t0
-    log.write(str(delta) + '\n')
-
-def open_file(file_name):
-    mode = 'r+' if os.path.exists(file_name) else 'w'
-    f = open(file_name, mode)
-    return f
-
-def total_time():
-    total = timedelta(0)
-    prev = ''
-    today = datetime.today()
-    for line in log:
-        if re.match('^\d?\d:\d\d:\d\d\.\d{6}$', line):
-            ptime = datetime.strptime(prev.split('.')[0], '%Y-%m-%d %H:%M:%S')
-            if ptime.month == today.month:
-                temp = line.split(':')
-                (h, m) = (int(temp[0]), int(temp[1]))
-                temp = temp[2].strip().split('.')
-                (s, ms) = (int(temp[0]), int(temp[1]))
-                delta = timedelta(hours=h, minutes=m, seconds=s, microseconds=ms)
-                total += delta
-        prev = line.strip()
-    return str(total)
+punch_manager = Manager(description='The punch manager')
+time_manager = Manager(description='The time manager')
 
 
-if __name__ == '__main__':
-    log = open_file('.log')
-    count = open_file('.count')
-    try: c = int(count.read())
-    except: c = 0
-    if len(sys.argv) == 2:
-        if sys.argv[1] == 'total' and c != 0:
-            print total_time()
-            sys.exit()
+@time_manager.command
+def total():
+    log = open_file('.log', 'r+')
+    print total_time(log)
+
+
+@punch_manager.command
+def punch():
+    log = open_file('.log', 'r+')
+    count = open_file('.count', 'r+')
+    try:
+        c = int(count.read())
+    except:
+        c = 0
     c += 1
     if c & 1:
-        try: 
+        try:
             for line in log:
                 pass
-        except: pass
-        write_date(datetime.today(), 'in') 
-    else:
-        for line in log:
+        except:
             pass
+        write_date(log, count, c, datetime.today(), 'in')
+    else:
+        line = get_last_line(log)
         last = line.split('.')[0]
         t0 = datetime.strptime(last, '%Y-%m-%d %H:%M:%S')
         t1 = datetime.today()
-        write_date(t1, 'out')
-        write_delta(t0, t1)
+        write_date(log, count, c, t1, 'out')
+        write_delta(log, t0, t1)
     log.close()
     count.close()
