@@ -1,4 +1,4 @@
-import os.path
+import os
 import sys
 import re
 from datetime import datetime, timedelta
@@ -11,14 +11,16 @@ time_manager = Manager(description='The time manager')
 
 @time_manager.command
 def total():
-    log = open_file('.log', 'r')
+    punch_dir = os.path.dirname(__file__)
+    log = open_file(punch_dir + '/.log', 'r')
     print total_time(log)
 
 
 @punch_manager.command
 def punch():
-    log = open_file('.log', 'a+')
-    count = open_file('.count', 'r+')
+    punch_dir = os.path.dirname(__file__)
+    log = open_file(punch_dir + '/.log', 'a+')
+    count = open_file(punch_dir + '/.count', 'r+')
     try:
         c = int(count.read())
     except:
