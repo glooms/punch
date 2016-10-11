@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" > /dev/null && pwd )"
-alias punch="python $DIR/manager.py punch"
-alias workingtime="python $DIR/manager.py time total"

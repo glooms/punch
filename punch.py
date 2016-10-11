@@ -8,13 +8,21 @@ from script_manager import Manager
 punch_manager = Manager(description='The punch manager')
 time_manager = Manager(description='The time manager')
 
+@time_manager.command
+def month(month):
+    print time_month(open_log(), int(month))
+
+@time_manager.command
+def this_month():
+    print time_this_month(open_log())
+
+@time_manager.command
+def today():
+    print time_today(open_log())
 
 @time_manager.command
 def total():
-    punch_dir = os.path.dirname(__file__)
-    log = open_file(punch_dir + '/.log', 'r')
-    print total_time(log)
-
+    print time(open_log())
 
 @punch_manager.command
 def punch():
@@ -36,3 +44,7 @@ def punch():
         append_date(log, count, c, t1, 'out')
         append_delta(log, t0, t1)
     log.close()
+
+def open_log():
+    punch_dir = os.path.dirname(__file__)
+    return open_file(punch_dir + '/.log', 'r')

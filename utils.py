@@ -9,15 +9,30 @@ def open_file(file_name, action):
     f = open(file_name, mode)
     return f
 
+def time_month(log, month):
+    return time(log, month=month)
 
-def total_time(log):
+def time_this_month(log):
+    return time(log, month=datetime.today().month)
+
+def time_today(log):
+    return time(log, day=datetime.today().day)
+
+def time(log, day=None, month=None):
+    if not (day or month):
+        print 'Total time worked:'
+    if month :
+        print 'Time worked month %d:' % month
+    if day :
+        print 'Time worked today:'
     total = timedelta(0)
     prev = ''
     today = datetime.today()
+    date_filter = lambda x : not (month or day) or (month and x.month == month) or (day and x.day == day)
     for line in log:
         if re.match('^\d?\d:\d\d:\d\d\.\d{6}$', line):
             ptime = datetime.strptime(prev.split('.')[0], '%Y-%m-%d %H:%M:%S')
-            if ptime.month == today.month:
+            if date_filter(ptime):
                 temp = line.split(':')
                 (h, m) = (int(temp[0]), int(temp[1]))
                 temp = temp[2].strip().split('.')
