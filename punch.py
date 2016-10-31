@@ -10,6 +10,14 @@ time_manager = Manager(description='The time manager')
 
 @time_manager.command
 def month(month):
+    m = 0
+    try:
+        m = int(month)
+        if m < 1 or m > 12:
+            sys.exit()
+    except:
+        print 'Please enter an integer between 1 and 12!'
+        sys.exit()
     print time_month(open_log(), int(month))
 
 @time_manager.command
