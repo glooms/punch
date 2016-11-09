@@ -1,7 +1,7 @@
 import os.path
 import sys
 import re
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 
 
 def open_file(file_name, action):
@@ -10,25 +10,27 @@ def open_file(file_name, action):
     return f
 
 def time_month(log, month):
-    return time(log, month=month)
+    date_filter = lambda x : x.month == month
+    return time(log, date_filter)
 
 def time_this_month(log):
-    return time(log, month=datetime.today().month)
+    return time_month(log, datetime.today().month)
 
 def time_today(log):
-    return time(log, day=datetime.today().day)
+    date_filter = lambda x : x.day == datetime.today().day
+    return time(log, date_filter)
 
-def time(log, day=None, month=None):
-    if not (day or month):
-        print 'Total time worked:'
-    if month :
-        print 'Time worked month %d:' % month
-    if day :
-        print 'Time worked today:'
+def time_this_week(log):
+    today = datetime.today()
+    weekday = date.weekday(today)
+    this_month = today.month
+    date_filter = lambda x : x.month == this_month and x.day >= today.day - weekday and x.day < today.day + 7 - weekday
+    return time(log, date_filter)
+
+def time(log, date_filter=lambda x : x):
     total = timedelta(0)
     prev = ''
     today = datetime.today()
-    date_filter = lambda x : not (month or day) or (month and x.month == month) or (day and x.day == day)
     for line in log:
         if re.match('^\d?\d:\d\d:\d\d\.\d{6}$', line):
             ptime = datetime.strptime(prev.split('.')[0], '%Y-%m-%d %H:%M:%S')

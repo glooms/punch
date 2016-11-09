@@ -21,6 +21,10 @@ def month(month):
     print time_month(open_log(), int(month))
 
 @time_manager.command
+def this_week():
+    print time_this_week(open_log())
+
+@time_manager.command
 def this_month():
     print time_this_month(open_log())
 
