@@ -17,7 +17,10 @@ def time_this_month(log):
     return time_month(log, datetime.today().month)
 
 def time_today(log):
-    date_filter = lambda x : x.day == datetime.today().day
+    aux1 = lambda x : x.month == datetime.today().month
+    aux2 = lambda x : x.year == datetime.today().year
+    date_filter = lambda x : (x.day == datetime.today().day and
+                    aux1(x) and aux2(x))
     return time(log, date_filter)
 
 def time_this_week(log):
