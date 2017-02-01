@@ -26,8 +26,9 @@ def time_today(log):
 def time_this_week(log):
     today = datetime.today()
     weekday = date.weekday(today)
-    this_month = today.month
-    date_filter = lambda x : x.month == this_month and x.day >= today.day - weekday and x.day < today.day + 7 - weekday
+    week_start = today - timedelta(weekday)
+    week_end = today + timedelta(7 - weekday)
+    date_filter = lambda x : x >= week_start and x < week_end
     return time(log, date_filter)
 
 def time(log, date_filter=lambda x : x):
