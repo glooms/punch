@@ -24,11 +24,11 @@ def time_today(log):
     return time(log, date_filter)
 
 def time_this_week(log):
-    today = datetime.today()
+    today = datetime.today().date()
     weekday = date.weekday(today)
     week_start = today - timedelta(weekday)
     week_end = today + timedelta(7 - weekday)
-    date_filter = lambda x : x >= week_start and x < week_end
+    date_filter = lambda x : x.date() >= week_start and x.date() < week_end
     return time(log, date_filter)
 
 def time(log, date_filter=lambda x : x):
