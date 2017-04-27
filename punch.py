@@ -21,20 +21,14 @@ def month(month):
     print time_month(open_log(), int(month))
 
 @time_manager.command
-def this_week():
-    print time_this_week(open_log())
-
-@time_manager.command
-def this_month():
-    print time_this_month(open_log())
-
-@time_manager.command
-def today():
+def time():
     print time_today(open_log())
 
 @time_manager.command
-def total():
-    print time(open_log())
+def more():
+    print 'Today:\t\t' + time_today(open_log())
+    print 'This week:\t' + time_this_week(open_log())
+    print 'This month:\t' + time_this_month(open_log())
 
 @punch_manager.command
 def punch():

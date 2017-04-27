@@ -1,6 +1,7 @@
 import os.path
 import sys
 import re
+import math
 from datetime import datetime, timedelta, date
 
 
@@ -46,7 +47,13 @@ def time(log, date_filter=lambda x : x):
                 delta = timedelta(hours=h, minutes=m, seconds=s, microseconds=ms)
                 total += delta
         prev = line.strip()
-    return str(total)
+    return format_time(total)
+
+def format_time(time):
+    s = round(time.total_seconds())
+    h = int(math.floor(s / 3600))
+    m = int(round((s - h * 3600) / 60))
+    return str(h).zfill(2) + ':' +  str(m).zfill(2)
 
 
 def append_date(log, count, c, date, punch):
